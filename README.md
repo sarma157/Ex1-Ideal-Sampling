@@ -110,70 +110,51 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.signal import butter, lfilter
 
-fs = 1000  # Sampling frequency (samples per second)
-T = 1      # Duration in seconds
-t = np.arange(0, T, 1/fs)  # Time vector
-fm = 5     # Frequency of message signal (Hz)
-message_signal = np.sin(2 * np.pi * fm * t)
-pulse_rate = 50  # pulses per second
-pulse_train_indices = np.arange(0, len(t), int(fs / pulse_rate))
-pulse_train = np.zeros_like(t)
-pulse_train[pulse_train_indices] = 1
-flat_top_signal = np.zeros_like(t)
-sample_times = t[pulse_train_indices]
-pulse_width_samples = int(fs / (2 * pulse_rate)) # Adjust pulse width as needed
+# Parameters
+fs, T, fm, fp = 1000, 1, 5, 50
+t = np.arange(0, T, 1/fs)
 
-for i, sample_time in enumerate(sample_times):
-    index = np.argmin(np.abs(t - sample_time))
-    if index < len(message_signal):
-        sample_value = message_signal[index]
-        start_index = index
-        end_index = min(index + pulse_width_samples, len(t))
-        flat_top_signal[start_index:end_index] = sample_value
+# Message signal
+m = np.sin(2 * np.pi * fm * t)
 
-def lowpass_filter(signal, cutoff, fs, order=5):
-    nyquist = 0.5 * fs
-    normal_cutoff = cutoff / nyquist
-    b, a = butter(order, normal_cutoff, btype='low', analog=False)
-    return lfilter(b, a, signal)
+# Sampling
+bd = fs // fp
+idx = np.arange(0, len(t), bd)
 
-cutoff_freq = 2 * fm  # Nyquist rate or slightly higher
-reconstructed_signal = lowpass_filter(flat_top_signal, cutoff_freq, fs)
+flat = np.zeros_like(t)
 
-plt.figure(figsize=(14, 10))
+for i in idx:
+    flat[i:i + bd // 2] = m[i]
+
+# Low-pass filter (reconstruction)
+b, a = butter(4, (2 * fm) / (0.5 * fs), 'low')
+recon = lfilter(b, a, flat)
+
+# Plot
+plt.figure(figsize=(10, 9))
+plt.suptitle(
+    "NAME :SARMASARAN M\nREG NO : 212224060239",
+    fontsize=12,
+    fontweight='bold'
+)
 
 plt.subplot(4, 1, 1)
-plt.plot(t, message_signal, label='Original Message Signal')
-plt.title('Original Message Signal')
-plt.xlabel('Time (s)')
-plt.ylabel('Amplitude')
-plt.legend()
-plt.grid(True)
+plt.plot(t, m)
+plt.title("Message Signal")
 
 plt.subplot(4, 1, 2)
-plt.stem(t[pulse_train_indices], pulse_train[pulse_train_indices], basefmt=" ", label='Ideal Sampling Instances')
-plt.title('Ideal Sampling Instances')
-plt.xlabel('Time (s)')
-plt.ylabel('Amplitude')
-plt.legend()
-plt.grid(True)
+plt.stem(t[idx], np.ones_like(idx), basefmt=" ")
+plt.title("Sampling Instants")
 
 plt.subplot(4, 1, 3)
-plt.plot(t, flat_top_signal, label='Flat-Top Sampled Signal')
-plt.title('Flat-Top Sampled Signal')
-plt.xlabel('Time (s)')
-plt.ylabel('Amplitude')
-plt.grid(True)
-plt.legend()
+plt.plot(t, flat)
+plt.title("Flat-Top Sampled Signal")
 
 plt.subplot(4, 1, 4)
-plt.plot(t, reconstructed_signal, label=f'Reconstructed Signal (Low-pass Filter, Cutoff={cutoff_freq} Hz)', color='green')
-plt.title('Reconstructed Signal')
-plt.xlabel('Time (s)')
-plt.ylabel('Amplitude')
-plt.legend()
-plt.grid(True)
-plt.tight_layout()
+plt.plot(t, recon, color='g')
+plt.title("Reconstructed Signal")
+
+plt.tight_layout(rect=[0, 0, 1, 0.93])
 plt.show()
 ```
 ## OUTPUT WAVEFORM:
