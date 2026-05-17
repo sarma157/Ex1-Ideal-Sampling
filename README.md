@@ -160,15 +160,15 @@ plt.show()
 ## OUTPUT WAVEFORM:
 #### IDEAL SAMPLING:
 
-<img width="1042" height="830" alt="image" src="https://github.com/user-attachments/assets/693ad149-ab6b-427d-af24-893525391346" />
+<img width="825" height="658" alt="image" src="https://github.com/user-attachments/assets/4edc0ce2-60c5-44ea-947c-6dc0d37cd5d3" />
 
 #### NATURAL SAMPLING:
 
-<img width="937" height="851" alt="image" src="https://github.com/user-attachments/assets/daeef361-20ea-4751-8ed1-adefe624cdf2" />
+<img width="825" height="737" alt="image" src="https://github.com/user-attachments/assets/544d85f2-a225-423a-bb42-5fbc1ebd4060" />
 
 #### FLAT-TOP SAMPLING:
 
-<img width="822" height="737" alt="image" src="https://github.com/user-attachments/assets/76d0d2e2-fc27-4ceb-9a2e-6f619e319d5b" />
+<img width="817" height="740" alt="image" src="https://github.com/user-attachments/assets/7767699f-6f23-4482-8383-db49faca3c65" />
 
 
 
